@@ -141,7 +141,10 @@ function displayChoices(choicesArray) {
   clearChoices();
   for (var i = 0; i < choicesArray.length; i++) {
     var choice = $("<button>");
-    choice.text(choicesArray[i].choice).addClass("btn btn-primary choice");
+    choice
+    .text(choicesArray[i].choice)
+    .addClass("btn btn-primary choice")
+    .attr("index", i);
     $(".choices").append(choice);
   }
 }
@@ -176,35 +179,39 @@ function nextQuestion() {
     displayChoices(choices);
     //  Set a time out for the answers to show if the correct answer is not chosen
     timesUp = setTimeout(function() {
-      showSomething(choices);
+      showAnswer(choices);
     }, 4000);
   } else {
+      console.log("have to change the screen to display the results");
     stopQuestions();
     displayResults();
   }
 }
 
-function showSomething(choicesArray) {
+
+function showAnswer(choicesArray) {
   //  Something I found that can find the index of the array where a certain key is
   clearQuestion();
   var index = choicesArray.findIndex(function(choice) {
     return choice.status === "true";
   });
+  //  Show the answer on the screen
   var answer = $("<h1>");
   answer.text("The answer is: " + choicesArray[index].choice);
   $(".question-area").append(answer);
-
   //  Increment the incorrect answers by one and show a screen that shows the correct answer
+  incorrectAnswers++;
 }
 
+//  This stops the interval timer when the game is over
 function stopQuestions() {
   clearInterval(gameTimer);
 }
 
 //**   Event Listeners   **/
-
-//  Start Button Listener
 $(document).ready(function() {
+
+    //  Start Button Listener
   $("#start-game").on("click", function() {
     $("#start-game").remove();
     initialize();
@@ -213,13 +220,9 @@ $(document).ready(function() {
   });
 
   //Choice Button Listener
-  $(".selected-answer").on("click", function() {
-    if (selectedAnswer === answer) {
-      //showCongrats();
-    } else {
-      //greySelection();
-    }
+  $(".choice").on("click", function() {
   });
+
 });
 
 /*
