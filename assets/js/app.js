@@ -48,7 +48,7 @@ var questions = [
 
 ];
 
-for ( var i = 0; i < questions.length; i++){
+/*for ( var i = 0; i < questions.length; i++){
     console.log(questions[i].question);
     console.log(questions[i].a);
     console.log(questions[i].b);
@@ -56,7 +56,33 @@ for ( var i = 0; i < questions.length; i++){
     console.log(questions[i].d);
     console.log(questions[i].answer);
     console.log(questions[i].link);
+}*/
+
+var questionsAsked = []; //  this will be the questions that were already asked
+var currentQuestion;
+
+
+// randomizes the question asked
+function pickQuestion () {
+    var randomNumber = Math.floor(Math.random() * questions.length);
+    if (questions.length > 0){
+        questionsAsked.push(questions[randomNumber]);
+        currentQuestion = questions[randomNumber];
+        questions.splice(randomNumber, 1);
+        console.log(currentQuestion);
+        console.log(currentQuestion.answer);
+        
+    } else {
+        console.log("array is empty, no more questions to ask");
+        gameRunning = false;
+    }
+
 }
+
+$("#another-button").on("click", function (){
+    pickQuestion();
+
+});
 
 //  Variables
 var correctAnswers;
@@ -76,17 +102,19 @@ function initialize () {
 
 }
 
-function chooseQuestion () {}
+
 
 function startTimer () {
     //  Show the Timed Out screen after 30 seconds
     showQuestion = setTimeout(showTimeOut, 3000);
 }
 
+//  Maybe should be called show next question..  automatically chooses a next question
 function showQuestion () {
-    var question = $("<h1>");
-    question.text(questions[0].question);
-    $(".question-area").append(question);
+    pickQuestion();
+    var questionHTML = $("<h1>");
+    questionHTML.text(currentQuestion.question);
+    $(".question-area").append(questionHTML);
 }
 
 function showAnswer () {}
@@ -95,12 +123,12 @@ function showCongrats () {}
 
 function showTimeOut () {
     //  Increment the incorrect answers by one and show a screen that shows the correct answer
-    console.log("test");
 
     $(".question-area").empty();
     var test = $("<h1>");
-    test.text("some generic text");
+    test.text(currentQuestion.answer);
     $(".question-area").append(test);
+    //  set another time out to show next question
     
 }
 
