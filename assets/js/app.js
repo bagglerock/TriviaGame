@@ -119,15 +119,17 @@ function randomizeChoices(questionObject) {
 
 //**   DOM manipulation functions   **/
 
-//  Function that clears the Question area
+//  Function that clears the area where the questions are shown
 function clearQuestion() {
   $(".question-area").empty();
 }
 
+//  Function that clears the area where the choices are shown
 function clearChoices () {
     $(".choices").empty();
 }
 
+//  Display the question in the question area
 function displayQuestion (questionObject) {
     clearQuestion();
     console.log(questionObject.question);
@@ -136,6 +138,7 @@ function displayQuestion (questionObject) {
     $(".question-area").append(question);
 }
 
+//  Display the buttons of the choices in the choices area
 function displayChoices (choicesArray) {
     clearChoices();
     for ( var i = 0; i < choicesArray.length; i++ ){
@@ -149,6 +152,7 @@ function displayChoices (choicesArray) {
 
 
 }
+
 
 function displayResults() {
   clearQuestion();
@@ -166,14 +170,17 @@ function startTimer() {
 
 //  Maybe should be called show next question..  automatically chooses a next question
 function nextQuestion() {
+    //  If the game is running... 
   if (gameRunning) {
+      //  Pick a question out of a hat and set it to an object called currentQuestion
     var currentQuestion = pickQuestion();
+    //  Changed the order of the choices and set them to a new array called choices
     var choices = randomizeChoices(currentQuestion);
+    //  Display the question in the question-area
     displayQuestion(currentQuestion);
+    //  Display the choices in the choice area
     displayChoices(choices);
-
-
-
+    //  Set a time out for the answers to show if the correct answer is not chosen
     showAnswer = setTimeout(showTimeOut, 4000);
   } else {
     stopQuestions();
