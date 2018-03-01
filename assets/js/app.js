@@ -21,4 +21,16 @@ function showAnswer () {}
 
 function showCongrats () {}
 
-function showWrong () {}
+function showTimeOut () {}
+
+$(document).ready(function () {
+
+    $("#start-game").on("click", function() {
+        $("#start-game").remove();
+    });
+
+
+
+
+
+});
