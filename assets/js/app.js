@@ -1,51 +1,51 @@
 //  Array of Questions with answers
 var questions = [
-    { 
-        "question": "What color is the sky?",
-        "a" : "Red",
-        "b" : "Green",
-        "c" : "Blue",
-        "d" : "Orange",
-        "answer" : "d",
-        "link" : "somelink.com"
-    },
-    { 
-        "question": "How many fingers does a human person have?",
-        "a" : "11",
-        "b" : "2",
-        "c" : "3",
-        "d" : "5",
-        "answer" : "d",
-        "link" : "somelink.com"
-    },
-    { 
-        "question": "What is the temperature on Mars?",
-        "a" : "110C",
-        "b" : "42C",
-        "c" : "3C",
-        "d" : "I haven't an effin clue!",
-        "answer" : "d",
-        "link" : "somelink.com"
-    },
-    { 
-        "question": "What does the fox say?",
-        "a" : "EEEE EEE EEEE EEEE EEEE EEEE",
-        "b" : "CHUM CHUM CHUM CHUM CHUM CHUM",
-        "c" : "I forget.",
-        "d" : "yakayakayakayaka",
-        "answer" : "c",
-        "link" : "somelink.com"
-    },
-    { 
-        "question": "How much wood could a woodchuck chuck if a woodchuck could chuck wood",
-        "a" : "632",
-        "b" : "infinity",
-        "c" : "85858",
-        "d" : "x^7",
-        "answer" : "b",
-        "link" : "somelink.com"
-    }
-
+  {
+    question: "If a person holds 3 widgets, How many tires can fit in a locker?",
+    a: "Banana",
+    b: "Dirt",
+    c: "Umbrella",
+    d: "Square root of a triangle",
+    answer: "d",
+    link: "somelink.com"
+  },
+  {
+    question: "If a plane is going 300mph, does Puppy like gyros?",
+    a: "Any",
+    b: "Martian",
+    c: "guitar",
+    d: "javascript",
+    answer: "d",
+    link: "somelink.com"
+  },
+  {
+    question: "10 times 6 is...",
+    a: "car",
+    b: "George Washington",
+    c: "perpetual motion",
+    d: "Tower of Hanoi",
+    answer: "d",
+    link: "somelink.com"
+  },
+  {
+    question: "The seven dwarfs are part of which highway",
+    a: "Frank Sinatra - My Way",
+    b: "hamster",
+    c: "17 dollars",
+    d: "aorta",
+    answer: "c",
+    link: "somelink.com"
+  },
+  {
+    question:
+      "Dallas, Massachussets is adjacent to the cellular membrane on which sandwich?",
+    a: "Salacious Crumb",
+    b: "pneumonoultramicroscopicsilicovolcanoconiosis",
+    c: "85858",
+    d: "Twelveteen",
+    answer: "b",
+    link: "somelink.com"
+  }
 ];
 
 /*for ( var i = 0; i < questions.length; i++){
@@ -61,27 +61,21 @@ var questions = [
 var questionsAsked = []; //  this will be the questions that were already asked
 var currentQuestion;
 
-
 // randomizes the question asked
-function pickQuestion () {
-    var randomNumber = Math.floor(Math.random() * questions.length);
-    if (questions.length > 0){
-        questionsAsked.push(questions[randomNumber]);
-        currentQuestion = questions[randomNumber];
-        questions.splice(randomNumber, 1);
-        console.log(currentQuestion);
-        console.log(currentQuestion.answer);
-        
-    } else {
-        console.log("array is empty, no more questions to ask");
-        gameRunning = false;
-    }
-
+function pickQuestion() {
+  var randomNumber = Math.floor(Math.random() * questions.length);
+  if (questions.length > 0) {
+    questionsAsked.push(questions[randomNumber]);
+    currentQuestion = questions[randomNumber];
+    questions.splice(randomNumber, 1);
+  } else {
+    console.log("array is empty, no more questions to ask");
+    gameRunning = false;
+  }
 }
 
-$("#another-button").on("click", function (){
-    pickQuestion();
-
+$("#another-button").on("click", function() {
+  pickQuestion();
 });
 
 //  Variables
@@ -94,70 +88,54 @@ var usedQuestions = [];
 
 //  Functions
 
-function initialize () {
-    gameRunning = true;
-    correctAnswers = 0;
-    incorrectAnswers = 0;
-
-
+function initialize() {
+  gameRunning = true;
+  correctAnswers = 0;
+  incorrectAnswers = 0;
 }
 
-
-
-function startTimer () {
-    //  Show the Timed Out screen after 30 seconds
-    showQuestion = setTimeout(showTimeOut, 3000);
+function startTimer() {
+  //  Show the Timed Out screen after 30 seconds
+  showQuestion = setTimeout(showTimeOut, 3000);
 }
 
 //  Maybe should be called show next question..  automatically chooses a next question
-function showQuestion () {
-    pickQuestion();
-    var questionHTML = $("<h1>");
-    questionHTML.text(currentQuestion.question);
-    $(".question-area").append(questionHTML);
+function nextQuestion() {
+  pickQuestion();
+  var questionHTML = $("<h1>");
+  questionHTML.text(currentQuestion.question);
+  $(".question-area").append(questionHTML);
 }
 
-function showAnswer () {}
+function showAnswer() {}
 
-function showCongrats () {}
+function showCongrats() {}
 
-function showTimeOut () {
-    //  Increment the incorrect answers by one and show a screen that shows the correct answer
-
-    $(".question-area").empty();
-    var test = $("<h1>");
-    test.text(currentQuestion.answer);
-    $(".question-area").append(test);
-    //  set another time out to show next question
-    
+function showTimeOut() {
+  //  Increment the incorrect answers by one and show a screen that shows the correct answer
+  $(".question-area").empty();
+  var test = $("<h1>");
+  test.text(currentQuestion.answer);
+  $(".question-area").append(test);
+  startTimer();
+  //  set another time out to show next question
 }
 
-$(document).ready(function () {
+$(document).ready(function() {
+  $("#start-game").on("click", function() {
+    $("#start-game").remove();
+    initialize();
+    nextQuestion();
+    startTimer();
+  });
 
-    $("#start-game").on("click", function() {
-        $("#start-game").remove();
-        initialize();
-        showQuestion();
-        startTimer();
-        
-
-    });
-
-    $(".selected-answer").on("click", function() {
-        if ( selectedAnswer === answer ){
-            //showCongrats();
-        } else {
-            //greySelection();
-        }
-
-    })
-
-
-
-
-
-
-
+  $(".selected-answer").on("click", function() {
+    if (selectedAnswer === answer) {
+      //showCongrats();
+    } else {
+      //greySelection();
+    }
+  });
 });
 
 /*
