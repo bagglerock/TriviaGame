@@ -4,57 +4,52 @@ var questions = [
   {
     question:
       "If a person holds 3 widgets, How many tires can fit in a locker?",
-    answers: [
-        {correct: "Banana",
-         incorrect: "Dirt",
-         incorrect: "Umbrella",
-         incorrect:  "Square root of a triangle"
-        }
+    choices: [
+        {choice: "Banana", status: "true"},
+        {choice: "Dirt", status: "false"},
+        {choice: "Umbrella", status: "false"},
+        {choice:"Square root of a triangle", status: "false"}
     ],
     link: "somelink.com"
   },
   {
     question: "If a plane is going 300mph, does Puppy like gyros?",
-    answers: [
-        {correct: "James Cameron",
-         incorrect: "Martian",
-         incorrect: "Guitar",
-         incorrect:  "Javascript"
-        }
+    choices: [
+        {choice: "James Cameron", status: "false"}, 
+        {choice: "Martian", status: "false"}, 
+        {choice: "Guitar", status: "false"}, 
+        {choice: "Javascript", status: "false"}
     ],
     link: "somelink.com"
   },
   {
     question: "10 times 6 is...",
-    answers: [
-        {correct: "Car",
-         incorrect: "George Washington",
-         incorrect: "Perpetual Motion",
-         incorrect:  "Tower of Hanoi"
-        }
+    choices: [
+        {choice: "Car", status: "false"}, 
+        {choice: "George Washington", status: "false"}, 
+        {choice: "Perpetual Motion", status: "false"}, 
+        {choice: "Tower of Hanoi", status: "false"}
     ],
     link: "somelink.com"
   },
   {
     question: "The seven dwarfs are part of which highway",
-    answers: [
-        {correct: "Hans Christian Anderson",
-         incorrect: "Hamster",
-         incorrect: "17 USD",
-         incorrect:  "Aorta"
-        }
+    choices: [
+        {choice: "Hans Christian Anderson", status: "false"}, 
+        {choice: "Hamster", status: "false"}, 
+        {choice: "17 USD", status: "false"}, 
+        {choice: "Aorta", status: "false"}
     ],
     link: "somelink.com"
   },
   {
     question:
       "Dallas, Massachussets is adjacent to the cellular membrane on which sandwich?",
-      answers: [
-        {correct: "Salacious Crumb",
-         incorrect: "Pneumonoultramicroscopicsilicovolcanoconiosis",
-         incorrect: "6 of Diamonds",
-         incorrect:  "Twelveteen"
-        }
+    choices: [
+      {choice: "Salacious Crumb", status: "false"},
+      {choice: "Pneumonoultramicroscopicsilicovolcanoconiosis", status: "false"},
+      {choice: "6 of Diamonds", status: "false"},
+      {choice: "Twelveteen", status: "false"}
     ],
     link: "somelink.com"
   }
@@ -79,9 +74,6 @@ var showQuestion;
 //  Variable to hold the timeout for the answer
 var showAnswer;
 
-//  Variable to store the current question object
-var currentQuestion;
-
 // Array to hold the questions that were asked
 var questionsAsked = [];
 
@@ -98,15 +90,26 @@ function initialize() {
 //   Function to change the order of how the questions come out, as well as keep track of which questions were asked.
 function pickQuestion() {
   var randomNumber = Math.floor(Math.random() * questions.length);
+  var chosenQuestion;
   if (questions.length > 0) {
-    currentQuestion = questions[randomNumber];
-    questionsAsked.push(currentQuestion);
+    chosenQuestion = questions[randomNumber];
+    questionsAsked.push(chosenQuestion);
     questions.splice(randomNumber, 1);
-    return currentQuestion; // not sure if i want it to return the object first or just leave it to update the global.
+    return chosenQuestion;
   } else {
     console.log("array is empty, no more questions to ask");
     gameRunning = false;
   }
+}
+
+function randomizeAnswers(questionObject) {
+  var randomNumber = Math.floor(Math.random() * questionObject.choices.length);
+
+  x = questionObject.choices[0];
+  return x;
+
+  //console.log(questions.answers.length);
+  //var randomNumber = Math.floor(Math.random() * questions.answers.length);
 }
 
 //  Randomize answers for replayability.  Put answers in an array and splice each question in an random order to display.  Somehow set the key for the correct answer
@@ -122,10 +125,12 @@ function startTimer() {
 //  Maybe should be called show next question..  automatically chooses a next question
 function nextQuestion() {
   if (gameRunning) {
-    clearQArea();
-    pickQuestion();
+    var currentQuestion = pickQuestion();
+    var answers = randomizeAnswers(currentQuestion);
+    console.log(answers);
+    clearQuestions();
     var questionHTML = $("<h1>");
-    questionHTML.text(currentQuestion.question);
+    questionHTML.text(answers);
     $(".question-area").append(questionHTML);
     showAnswer = setTimeout(showTimeOut, 4000);
   } else {
@@ -134,29 +139,29 @@ function nextQuestion() {
   }
 }
 
-function stopQuestions() {
-  clearInterval(showQuestion);
-}
-
 function showTimeOut() {
   //  Increment the incorrect answers by one and show a screen that shows the correct answer
-  clearQArea();
+  clearQuestions();
   var test = $("<h1>");
-  var a = currentQuestion.answer;
-  test.text(currentQuestion.a);
+  //var a = currentQuestion.answer;
+  test.text("nothing here yet");
   $(".question-area").append(test);
   //  set another time out to show next question
+}
+
+function stopQuestions() {
+  clearInterval(showQuestion);
 }
 
 //**   DOM manipulation functions   **/
 
 //  Function that clears the Question area
-function clearQArea() {
+function clearQuestions() {
   $(".question-area").empty();
 }
 
 function displayResults() {
-  clearQArea();
+  clearQuestions();
   var summary = $("<h1>");
   summary.text("There aren't any more questions");
   $(".question-area").append(summary);
