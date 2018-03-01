@@ -72,10 +72,10 @@ var intervalTimer = 30 * 1000;
 var TimeoutTimer = 5 * 1000;
 
 //  Variable to hold the interval for the question
-var showQuestion;
+var gameTimer;
 
 //  Variable to hold the timeout for the answer
-var showAnswer;
+var timesUp;
 
 // Array to hold the questions that were asked
 var questionsAsked = [];
@@ -92,16 +92,15 @@ function initialize() {
 
 //   Function to change the order of how the questions come out, as well as keep track of which questions were asked.
 function pickQuestion() {
-  var randomNumber = Math.floor(Math.random() * questions.length);
-  var chosenQuestion;
   if (questions.length > 0) {
-    chosenQuestion = questions[randomNumber];
+    var randomNumber = Math.floor(Math.random() * questions.length);
+    var chosenQuestion = questions[randomNumber];
     questionsAsked.push(chosenQuestion);
     questions.splice(randomNumber, 1);
+    if (questions.length === 0){
+        gameRunning = false;
+    }
     return chosenQuestion;
-  } else {
-    console.log("array is empty, no more questions to ask");
-    gameRunning = false;
   }
 }
 
@@ -125,34 +124,27 @@ function clearQuestion() {
 }
 
 //  Function that clears the area where the choices are shown
-function clearChoices () {
-    $(".choices").empty();
+function clearChoices() {
+  $(".choices").empty();
 }
 
 //  Display the question in the question area
-function displayQuestion (questionObject) {
-    clearQuestion();
-    console.log(questionObject.question);
-    var question = $("<h1>");
-    question.text(questionObject.question);
-    $(".question-area").append(question);
+function displayQuestion(questionObject) {
+  clearQuestion();
+  var question = $("<h1>");
+  question.text(questionObject.question);
+  $(".question-area").append(question);
 }
 
 //  Display the buttons of the choices in the choices area
-function displayChoices (choicesArray) {
-    clearChoices();
-    for ( var i = 0; i < choicesArray.length; i++ ){
-        var choice = $("<button>");
-        choice
-        .text(choicesArray[i].choice)
-        .addClass("btn btn-primary");
-        $(".choices").append(choice);
-    }
-    
-
-
+function displayChoices(choicesArray) {
+  clearChoices();
+  for (var i = 0; i < choicesArray.length; i++) {
+    var choice = $("<button>");
+    choice.text(choicesArray[i].choice).addClass("btn btn-primary choice");
+    $(".choices").append(choice);
+  }
 }
-
 
 function displayResults() {
   clearQuestion();
@@ -165,14 +157,16 @@ function displayResults() {
 
 function startTimer() {
   //  Show the Timed Out screen after 30 seconds
-  showQuestion = setInterval(nextQuestion, 5000);
+  gameTimer = setInterval(function() {
+    nextQuestion();
+  }, 5000);
 }
 
 //  Maybe should be called show next question..  automatically chooses a next question
 function nextQuestion() {
-    //  If the game is running... 
+  //  If the game is running...
   if (gameRunning) {
-      //  Pick a question out of a hat and set it to an object called currentQuestion
+    //  Pick a question out of a hat and set it to an object called currentQuestion
     var currentQuestion = pickQuestion();
     //  Changed the order of the choices and set them to a new array called choices
     var choices = randomizeChoices(currentQuestion);
@@ -181,27 +175,35 @@ function nextQuestion() {
     //  Display the choices in the choice area
     displayChoices(choices);
     //  Set a time out for the answers to show if the correct answer is not chosen
-    showAnswer = setTimeout(showTimeOut, 4000);
+    timesUp = setTimeout(function() {
+      showSomething(choices);
+    }, 4000);
   } else {
     stopQuestions();
     displayResults();
   }
 }
 
-function showTimeOut() {
-  //  Increment the incorrect answers by one and show a screen that shows the correct answer
+function showSomething(choicesArray) {
+  //  Something I found that can find the index of the array where a certain key is
   clearQuestion();
-  var test = $("<h1>");
-  //var a = currentQuestion.answer;
-  test.text("nothing here yet");
-  $(".question-area").append(test);
-  //  set another time out to show next question
+  var index = choicesArray.findIndex(function(choice) {
+    return choice.status === "true";
+  });
+  var answer = $("<h1>");
+  answer.text("The answer is: " + choicesArray[index].choice);
+  $(".question-area").append(answer);
+
+  //  Increment the incorrect answers by one and show a screen that shows the correct answer
 }
 
 function stopQuestions() {
-  clearInterval(showQuestion);
+  clearInterval(gameTimer);
 }
 
+//**   Event Listeners   **/
+
+//  Start Button Listener
 $(document).ready(function() {
   $("#start-game").on("click", function() {
     $("#start-game").remove();
@@ -210,6 +212,7 @@ $(document).ready(function() {
     startTimer();
   });
 
+  //Choice Button Listener
   $(".selected-answer").on("click", function() {
     if (selectedAnswer === answer) {
       //showCongrats();

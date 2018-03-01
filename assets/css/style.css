@@ -5,4 +5,11 @@
 
 .choices {
     height: 300px;
+    padding-top: 25px;
+    line-height: 200%;
+}
+
+.choice {
+    width: 400px;
+    margin-bottom: 20px;
 }
