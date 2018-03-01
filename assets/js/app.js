@@ -102,12 +102,18 @@ function startTimer() {
 
 //  Maybe should be called show next question..  automatically chooses a next question
 function nextQuestion() {
-    clearQArea();
-  pickQuestion();
-  var questionHTML = $("<h1>");
-  questionHTML.text(currentQuestion.question);
-  $(".question-area").append(questionHTML);
-  showAnswer = setTimeout(showTimeOut, 2000);
+    if (gameRunning){   
+         clearQArea();
+        pickQuestion();
+        var questionHTML = $("<h1>");
+        questionHTML.text(currentQuestion.question);
+        $(".question-area").append(questionHTML);
+        showAnswer = setTimeout(showTimeOut, 2000);
+    } else { 
+        stopInterval();
+        displayResults();
+    }
+
 }
 
 function clearQArea () {
@@ -120,7 +126,12 @@ function stopInterval () {
 
 }
 
-function showCongrats() {}
+function displayResults() {
+    clearQArea();
+    var summary = $("<h1>");
+    summary.text("There aren't any more questions")
+    $(".question-area").append(summary);
+}
 
 function showTimeOut() {
   //  Increment the incorrect answers by one and show a screen that shows the correct answer
