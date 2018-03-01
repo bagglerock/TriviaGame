@@ -84,6 +84,7 @@ var incorrectAnswers;
 var timer = 30;
 var gameRunning = false;
 var showQuestion;
+var showAnswer;
 var usedQuestions = [];
 
 //  Functions
@@ -96,28 +97,38 @@ function initialize() {
 
 function startTimer() {
   //  Show the Timed Out screen after 30 seconds
-  showQuestion = setTimeout(showTimeOut, 3000);
+  showQuestion = setInterval(nextQuestion, 5000);
 }
 
 //  Maybe should be called show next question..  automatically chooses a next question
 function nextQuestion() {
+    clearQArea();
   pickQuestion();
   var questionHTML = $("<h1>");
   questionHTML.text(currentQuestion.question);
   $(".question-area").append(questionHTML);
+  showAnswer = setTimeout(showTimeOut, 2000);
 }
 
-function showAnswer() {}
+function clearQArea () {
+    $(".question-area").empty();
+
+}
+
+function stopInterval () {
+    clearInterval(showQuestion);
+
+}
 
 function showCongrats() {}
 
 function showTimeOut() {
   //  Increment the incorrect answers by one and show a screen that shows the correct answer
-  $(".question-area").empty();
+  clearQArea();
   var test = $("<h1>");
-  test.text(currentQuestion.answer);
+  var a = currentQuestion.answer;
+  test.text(currentQuestion.a);
   $(".question-area").append(test);
-  startTimer();
   //  set another time out to show next question
 }
 
