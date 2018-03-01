@@ -4,48 +4,58 @@ var questions = [
   {
     question:
       "If a person holds 3 widgets, How many tires can fit in a locker?",
-    a: "Banana",
-    b: "Dirt",
-    c: "Umbrella",
-    d: "Square root of a triangle",
-    answer: "d",
+    answers: [
+        {correct: "Banana",
+         incorrect: "Dirt",
+         incorrect: "Umbrella",
+         incorrect:  "Square root of a triangle"
+        }
+    ],
     link: "somelink.com"
   },
   {
     question: "If a plane is going 300mph, does Puppy like gyros?",
-    a: "Any",
-    b: "Martian",
-    c: "guitar",
-    d: "javascript",
-    answer: "d",
+    answers: [
+        {correct: "James Cameron",
+         incorrect: "Martian",
+         incorrect: "Guitar",
+         incorrect:  "Javascript"
+        }
+    ],
     link: "somelink.com"
   },
   {
     question: "10 times 6 is...",
-    a: "car",
-    b: "George Washington",
-    c: "perpetual motion",
-    d: "Tower of Hanoi",
-    answer: "d",
+    answers: [
+        {correct: "Car",
+         incorrect: "George Washington",
+         incorrect: "Perpetual Motion",
+         incorrect:  "Tower of Hanoi"
+        }
+    ],
     link: "somelink.com"
   },
   {
     question: "The seven dwarfs are part of which highway",
-    a: "Frank Sinatra - My Way",
-    b: "hamster",
-    c: "17 dollars",
-    d: "aorta",
-    answer: "c",
+    answers: [
+        {correct: "Hans Christian Anderson",
+         incorrect: "Hamster",
+         incorrect: "17 USD",
+         incorrect:  "Aorta"
+        }
+    ],
     link: "somelink.com"
   },
   {
     question:
       "Dallas, Massachussets is adjacent to the cellular membrane on which sandwich?",
-    a: "Salacious Crumb",
-    b: "pneumonoultramicroscopicsilicovolcanoconiosis",
-    c: "85858",
-    d: "Twelveteen",
-    answer: "b",
+      answers: [
+        {correct: "Salacious Crumb",
+         incorrect: "Pneumonoultramicroscopicsilicovolcanoconiosis",
+         incorrect: "6 of Diamonds",
+         incorrect:  "Twelveteen"
+        }
+    ],
     link: "somelink.com"
   }
 ];
@@ -117,7 +127,7 @@ function nextQuestion() {
     var questionHTML = $("<h1>");
     questionHTML.text(currentQuestion.question);
     $(".question-area").append(questionHTML);
-    showAnswer = setTimeout(showTimeOut, 2000);
+    showAnswer = setTimeout(showTimeOut, 4000);
   } else {
     stopQuestions();
     displayResults();
