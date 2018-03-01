@@ -15,7 +15,7 @@ var questions = [
   {
     question: "If a plane is going 300mph, does Puppy like gyros?",
     choices: [
-        {choice: "James Cameron", status: "false"}, 
+        {choice: "James Cameron", status: "true"}, 
         {choice: "Martian", status: "false"}, 
         {choice: "Guitar", status: "false"}, 
         {choice: "Javascript", status: "false"}
@@ -25,7 +25,7 @@ var questions = [
   {
     question: "10 times 6 is...",
     choices: [
-        {choice: "Car", status: "false"}, 
+        {choice: "Car", status: "true"}, 
         {choice: "George Washington", status: "false"}, 
         {choice: "Perpetual Motion", status: "false"}, 
         {choice: "Tower of Hanoi", status: "false"}
@@ -35,7 +35,7 @@ var questions = [
   {
     question: "The seven dwarfs are part of which highway",
     choices: [
-        {choice: "Hans Christian Anderson", status: "false"}, 
+        {choice: "Hans Christian Anderson", status: "true"}, 
         {choice: "Hamster", status: "false"}, 
         {choice: "17 USD", status: "false"}, 
         {choice: "Aorta", status: "false"}
@@ -46,7 +46,7 @@ var questions = [
     question:
       "Dallas, Massachussets is adjacent to the cellular membrane on which sandwich?",
     choices: [
-      {choice: "Salacious Crumb", status: "false"},
+      {choice: "Salacious Crumb", status: "true"},
       {choice: "Pneumonoultramicroscopicsilicovolcanoconiosis", status: "false"},
       {choice: "6 of Diamonds", status: "false"},
       {choice: "Twelveteen", status: "false"}
@@ -102,14 +102,17 @@ function pickQuestion() {
   }
 }
 
+//  Function to change the order of how the choices will be displayed.  
 function randomizeAnswers(questionObject) {
-  var randomNumber = Math.floor(Math.random() * questionObject.choices.length);
-
-  x = questionObject.choices[0];
-  return x;
-
-  //console.log(questions.answers.length);
-  //var randomNumber = Math.floor(Math.random() * questions.answers.length);
+    var choices = questionObject.choices;
+    var randomizedChoices = [];
+  while ( choices.length > 0 ){
+      var randomNumber = Math.floor(Math.random() * choices.length);
+      randomizedChoices.push(choices[randomNumber]);
+      choices.splice(randomNumber, 1);
+  }
+  return randomizedChoices;
+  
 }
 
 //  Randomize answers for replayability.  Put answers in an array and splice each question in an random order to display.  Somehow set the key for the correct answer
