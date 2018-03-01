@@ -5,40 +5,40 @@ var questions = [
     question:
       "If a person holds 3 widgets, How many tires can fit in a locker?",
     choices: [
-        {choice: "Banana", status: "true"},
-        {choice: "Dirt", status: "false"},
-        {choice: "Umbrella", status: "false"},
-        {choice:"Square root of a triangle", status: "false"}
+      { choice: "Banana", status: "true" },
+      { choice: "Dirt", status: "false" },
+      { choice: "Umbrella", status: "false" },
+      { choice: "Square root of a triangle", status: "false" }
     ],
     link: "somelink.com"
   },
   {
     question: "If a plane is going 300mph, does Puppy like gyros?",
     choices: [
-        {choice: "James Cameron", status: "true"}, 
-        {choice: "Martian", status: "false"}, 
-        {choice: "Guitar", status: "false"}, 
-        {choice: "Javascript", status: "false"}
+      { choice: "James Cameron", status: "true" },
+      { choice: "Martian", status: "false" },
+      { choice: "Guitar", status: "false" },
+      { choice: "Javascript", status: "false" }
     ],
     link: "somelink.com"
   },
   {
     question: "10 times 6 is...",
     choices: [
-        {choice: "Car", status: "true"}, 
-        {choice: "George Washington", status: "false"}, 
-        {choice: "Perpetual Motion", status: "false"}, 
-        {choice: "Tower of Hanoi", status: "false"}
+      { choice: "Car", status: "true" },
+      { choice: "George Washington", status: "false" },
+      { choice: "Perpetual Motion", status: "false" },
+      { choice: "Tower of Hanoi", status: "false" }
     ],
     link: "somelink.com"
   },
   {
     question: "The seven dwarfs are part of which highway",
     choices: [
-        {choice: "Hans Christian Anderson", status: "true"}, 
-        {choice: "Hamster", status: "false"}, 
-        {choice: "17 USD", status: "false"}, 
-        {choice: "Aorta", status: "false"}
+      { choice: "Hans Christian Anderson", status: "true" },
+      { choice: "Hamster", status: "false" },
+      { choice: "17 USD", status: "false" },
+      { choice: "Aorta", status: "false" }
     ],
     link: "somelink.com"
   },
@@ -46,10 +46,13 @@ var questions = [
     question:
       "Dallas, Massachussets is adjacent to the cellular membrane on which sandwich?",
     choices: [
-      {choice: "Salacious Crumb", status: "true"},
-      {choice: "Pneumonoultramicroscopicsilicovolcanoconiosis", status: "false"},
-      {choice: "6 of Diamonds", status: "false"},
-      {choice: "Twelveteen", status: "false"}
+      { choice: "Salacious Crumb", status: "true" },
+      {
+        choice: "Pneumonoultramicroscopicsilicovolcanoconiosis",
+        status: "false"
+      },
+      { choice: "6 of Diamonds", status: "false" },
+      { choice: "Twelveteen", status: "false" }
     ],
     link: "somelink.com"
   }
@@ -102,21 +105,57 @@ function pickQuestion() {
   }
 }
 
-//  Function to change the order of how the choices will be displayed.  
-function randomizeAnswers(questionObject) {
-    var choices = questionObject.choices;
-    var randomizedChoices = [];
-  while ( choices.length > 0 ){
-      var randomNumber = Math.floor(Math.random() * choices.length);
-      randomizedChoices.push(choices[randomNumber]);
-      choices.splice(randomNumber, 1);
+//  Function to change the order of how the choices will be displayed.
+function randomizeChoices(questionObject) {
+  var choices = questionObject.choices;
+  var randomizedChoices = [];
+  while (choices.length > 0) {
+    var randomNumber = Math.floor(Math.random() * choices.length);
+    randomizedChoices.push(choices[randomNumber]);
+    choices.splice(randomNumber, 1);
   }
   return randomizedChoices;
-  
 }
 
-//  Randomize answers for replayability.  Put answers in an array and splice each question in an random order to display.  Somehow set the key for the correct answer
-//        - possible just set the correct answer as a long string in the object and compare each possibility with the correct answer.
+//**   DOM manipulation functions   **/
+
+//  Function that clears the Question area
+function clearQuestion() {
+  $(".question-area").empty();
+}
+
+function clearChoices () {
+    $(".choices").empty();
+}
+
+function displayQuestion (questionObject) {
+    clearQuestion();
+    console.log(questionObject.question);
+    var question = $("<h1>");
+    question.text(questionObject.question);
+    $(".question-area").append(question);
+}
+
+function displayChoices (choicesArray) {
+    clearChoices();
+    for ( var i = 0; i < choicesArray.length; i++ ){
+        var choice = $("<button>");
+        choice
+        .text(choicesArray[i].choice)
+        .addClass("btn btn-primary");
+        $(".choices").append(choice);
+    }
+    
+
+
+}
+
+function displayResults() {
+  clearQuestion();
+  var summary = $("<h1>");
+  summary.text("There aren't any more questions");
+  $(".question-area").append(summary);
+}
 
 //**   Functions that manipulate timers   **/
 
@@ -129,12 +168,12 @@ function startTimer() {
 function nextQuestion() {
   if (gameRunning) {
     var currentQuestion = pickQuestion();
-    var answers = randomizeAnswers(currentQuestion);
-    console.log(answers);
-    clearQuestions();
-    var questionHTML = $("<h1>");
-    questionHTML.text(answers);
-    $(".question-area").append(questionHTML);
+    var choices = randomizeChoices(currentQuestion);
+    displayQuestion(currentQuestion);
+    displayChoices(choices);
+
+
+
     showAnswer = setTimeout(showTimeOut, 4000);
   } else {
     stopQuestions();
@@ -144,7 +183,7 @@ function nextQuestion() {
 
 function showTimeOut() {
   //  Increment the incorrect answers by one and show a screen that shows the correct answer
-  clearQuestions();
+  clearQuestion();
   var test = $("<h1>");
   //var a = currentQuestion.answer;
   test.text("nothing here yet");
@@ -154,20 +193,6 @@ function showTimeOut() {
 
 function stopQuestions() {
   clearInterval(showQuestion);
-}
-
-//**   DOM manipulation functions   **/
-
-//  Function that clears the Question area
-function clearQuestions() {
-  $(".question-area").empty();
-}
-
-function displayResults() {
-  clearQuestions();
-  var summary = $("<h1>");
-  summary.text("There aren't any more questions");
-  $(".question-area").append(summary);
 }
 
 $(document).ready(function() {
