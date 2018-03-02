@@ -71,8 +71,8 @@ var correctAnswers;
 var incorrectAnswers;
 
 //  Timer Intervals
-var intervalTimer = 1000;
-var timeoutTimer = 1000;
+var intervalTimer = 5000;
+var timeoutTimer = 3000;
 
 //  Variable to hold the interval for the question
 var gameTimer;
@@ -99,7 +99,6 @@ function initialize() {
   //  Had to copy this little piece of code to deep clone an array.  A deep clone is a clone of an array that copies the objects within also
   //  This close was needed because the original array would be blank after one game was played
   questionsTwin = jQuery.extend(true, [], questions);
-  console.log(questionsTwin);
   questionsAsked = [];
 }
 
@@ -274,7 +273,7 @@ $(document).ready(function() {
   function celebrate(){
       setTimeout(function(){
           nextQuestion();
-      }, 100)
+      }, 1000)
   }
 
 
