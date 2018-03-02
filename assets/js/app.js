@@ -64,15 +64,15 @@ var questions = [
 var gameRunning = false;
 
 // countdown display
-var countdown = 30;
+var countdown = 25;
 
 //  Tallies
 var correctAnswers;
 var incorrectAnswers;
 
 //  Timer Intervals
-var intervalTimer = 5000;
-var timeoutTimer = 3000;
+var intervalTimer = 30000;
+var timeoutTimer = 25000;
 
 //  Variable to hold the interval for the question
 var gameTimer;
@@ -91,8 +91,6 @@ var answerIndex;
 
 //  Function that initializes the game when starts.  Sets game to true, resets the tallies, clears out array of questions asked.
 function initialize() {
-    
-    
   gameRunning = true;
   correctAnswers = 0;
   incorrectAnswers = 0;
@@ -105,35 +103,67 @@ function initialize() {
 //   Function to change the order of how the questions come out, as well as keep track of which questions were asked.
 function pickQuestion() {
   if (questionsTwin.length > 0) {
+    //  Set a random number to between 0 and the length of the array of questions
     var randomNumber = Math.floor(Math.random() * questionsTwin.length);
+    //  Choose a random question object based on the randomNumber
     var chosenQuestion = questionsTwin[randomNumber];
+    //  Push the question onto a new array of questions asked so questions won't be duplicated
     questionsAsked.push(chosenQuestion);
+    //  Remove the question from the cloned object array so the question cannot be chosen again
     questionsTwin.splice(randomNumber, 1);
+    //  If the questions have all been asked, then set the gameRunning to false
     if (questionsTwin.length === 0) {
       gameRunning = false;
     }
+    //  Return the chosen question
     return chosenQuestion;
   }
 }
 
-//  Function to change the order of how the choices will be displayed.
+//  Function to change the order of how the choices will be displayed.  This takes in the chosen question object from pickQuestion()
 function randomizeChoices(questionObject) {
+  // Make variables (Reset variables) for the choices from the question object and another array for the questions after they have been randomized
   var choices = questionObject.choices;
   var randomizedChoices = [];
+  //  White there are still choices remaining, push them into the randomizedChoices array and remove them from the original choices array
   while (choices.length > 0) {
     var randomNumber = Math.floor(Math.random() * choices.length);
     randomizedChoices.push(choices[randomNumber]);
     choices.splice(randomNumber, 1);
   }
+  //  Return this newly reordered bunch of choices
   return randomizedChoices;
 }
 
+//  Get the index of the answer and set the global variable as this answer
 function getIndex(choicesArray) {
   var index = choicesArray.findIndex(function(choice) {
     return choice.status === "true";
   });
-
   answerIndex = index;
+}
+
+//  Pretty much the main function ... automatically chooses a next question
+function nextQuestion() {
+  //  If the game is running...
+  if (gameRunning) {
+    //  Pick a question out of a hat and set it to an object called currentQuestion
+    var currentQuestion = pickQuestion();
+    //  Changed the order of the choices and set them to a new array called choices
+    var choices = randomizeChoices(currentQuestion);
+    //  Display the question in the question-area
+    displayQuestion(currentQuestion);
+    //  Display the choices in the choice area
+    displayChoices(choices);
+    //  Make the index into a global variable
+    getIndex(choices);
+    //  Set a time out for the answers to show if the correct answer is not chosen
+    setTimesUp(choices);
+  } else {
+    //  If the game is done then stop the questions from running and display the results
+    stopQuestions();
+    displayResults();
+  }
 }
 
 //**   DOM manipulation functions   **/
@@ -163,16 +193,24 @@ function displayChoices(choicesArray) {
     var choice = $("<button>");
     choice
       .text(choicesArray[i].choice)
-      .addClass("btn btn-primary choice")
+      .addClass("btn btn-warning choice")
+      //  Set the index here so we have a way of determining the correct answer
       .attr("index", i);
     $(".choices").append(choice);
   }
 }
 
+//  Display the results on the screen
 function displayResults() {
   clearQuestion();
   var summary = $("<p>");
-  summary.text("You have made " + correctAnswers + " correct answers and " + incorrectAnswers + " incorrect answers");
+  summary.text(
+    "You have made " +
+      correctAnswers +
+      " correct answers and " +
+      incorrectAnswers +
+      " incorrect answers"
+  );
   var message = $("<h1>");
   message.text("Here are your results");
   $(".question-area").append(message);
@@ -180,15 +218,17 @@ function displayResults() {
   makeStartButton();
 }
 
+//  Since there are alot of clearing of the divs, we have to make the start button again
 function makeStartButton() {
-    var startButton = $("<button>");
-    startButton
+  var startButton = $("<button>");
+  startButton
     .attr("id", "start-game")
     .addClass("btn btn-secondary")
     .text("Start Game");
-    $(".question-area").append(startButton);
+  $(".question-area").append(startButton);
 }
 
+//  Show the answer if the timer goes to 0 and increment the incorrect answers tally
 function showAnswer(choicesArray) {
   //  Something I found that can find the index of the array where a certain key is
   clearQuestion();
@@ -203,40 +243,20 @@ function showAnswer(choicesArray) {
   incorrectAnswers++;
 }
 
-//  Maybe should be called show next question..  automatically chooses a next question
-function nextQuestion() {
-    //  If the game is running...
-    if (gameRunning) {
-      //  Pick a question out of a hat and set it to an object called currentQuestion
-      var currentQuestion = pickQuestion();
-      //  Changed the order of the choices and set them to a new array called choices
-      var choices = randomizeChoices(currentQuestion);
-      //  Display the question in the question-area
-      displayQuestion(currentQuestion);
-      //  Display the choices in the choice area
-      displayChoices(choices);
-      //  Make the index into a global variable
-      getIndex(choices);
-      //  Set a time out for the answers to show if the correct answer is not chosen
-      setTimesUp(choices);
-    } else {
-      stopQuestions();
-      displayResults();
-    }
-  }
-
 //**   Functions that manipulate timers   **/
 
+//  Start the timer for the questions to show
 function startTimer() {
   gameTimer = setInterval(function() {
     nextQuestion();
   }, intervalTimer);
 }
 
+//  Start the timer to show the answer if you fail to choose one in the insanely long amount of time alotted
 function setTimesUp(choicesArray) {
-    timesUp = setTimeout(function() {
-        showAnswer(choicesArray);
-      }, timeoutTimer);
+  timesUp = setTimeout(function() {
+    showAnswer(choicesArray);
+  }, timeoutTimer);
 }
 
 //  This stops the interval timer when the game is over
@@ -245,51 +265,43 @@ function stopQuestions() {
   clearTimeout(timesUp);
 }
 
-//**   Event Listeners   **/
-$(document).ready(function() {
+//Celebrate
+function celebrate() {
+  setTimeout(function() {
+    nextQuestion();
+  }, 1000);
+}
 
+//**   Event Listeners   **/
+
+//  This just makes sure that the page is fully loaded to start listening to stuff
+$(document).ready(function() {
   //  Start Button Listener
   $(document).on("click", "#start-game", function() {
     $("#start-game").remove();
     initialize();
     nextQuestion();
     startTimer();
-    //console.log(questionsTwin);
   });
 
   //Choice Button Listener
   $(document).on("click", ".choice", function() {
     var buttonIndex = parseInt($(this).attr("index"));
     if (buttonIndex === answerIndex) {
-        correctAnswers++;
+      correctAnswers++;
       stopQuestions();
       celebrate();
     } else {
-        incorrectAnswers++;
+      incorrectAnswers++;
     }
   });
-
-  //Celebrate
-  function celebrate(){
-      setTimeout(function(){
-          nextQuestion();
-      }, 1000)
-  }
-
-
-
-
-
 });
-
-
 
 /*
 
 Issues to take on later:
 
 Need a visual countdown
-The mechanics still do not work.  The normal timer works but when the right answer is selected, it doesnt reset the timer.
 Visually needs some flair
 Message system needed, like please choose another choice or things like that.
 Have to change the questions to be more serious... or maybe add more unserious questions
