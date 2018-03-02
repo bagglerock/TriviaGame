@@ -80,6 +80,9 @@ var timesUp;
 // Array to hold the questions that were asked
 var questionsAsked = [];
 
+//  Can't figure out how to hide the answer so I'm storing it in a global variable
+var answerIndex = "";
+
 //**   Functions   **//
 
 //  Function that initializes the game when starts.  Sets game to true, resets the tallies, clears out array of questions asked.
@@ -114,6 +117,16 @@ function randomizeChoices(questionObject) {
     choices.splice(randomNumber, 1);
   }
   return randomizedChoices;
+}
+
+function getIndex(choicesArray) {
+    var index = choicesArray.findIndex(function(choice) {
+        return choice.status === "true";
+      });
+
+      answerIndex = index;
+      console.log(answerIndex);
+
 }
 
 //**   DOM manipulation functions   **/
@@ -156,6 +169,20 @@ function displayResults() {
   $(".question-area").append(summary);
 }
 
+function showAnswer(choicesArray) {
+    //  Something I found that can find the index of the array where a certain key is
+    clearQuestion();
+    var index = choicesArray.findIndex(function(choice) {
+      return choice.status === "true";
+    });
+    //  Show the answer on the screen
+    var answer = $("<h1>");
+    answer.text("The answer is: " + choicesArray[index].choice);
+    $(".question-area").append(answer);
+    //  Increment the incorrect answers by one and show a screen that shows the correct answer
+    incorrectAnswers++;
+  }
+
 //**   Functions that manipulate timers   **/
 
 function startTimer() {
@@ -177,6 +204,8 @@ function nextQuestion() {
     displayQuestion(currentQuestion);
     //  Display the choices in the choice area
     displayChoices(choices);
+    //  Make the index into a global variable
+    getIndex(choices);
     //  Set a time out for the answers to show if the correct answer is not chosen
     timesUp = setTimeout(function() {
       showAnswer(choices);
@@ -186,21 +215,6 @@ function nextQuestion() {
     stopQuestions();
     displayResults();
   }
-}
-
-
-function showAnswer(choicesArray) {
-  //  Something I found that can find the index of the array where a certain key is
-  clearQuestion();
-  var index = choicesArray.findIndex(function(choice) {
-    return choice.status === "true";
-  });
-  //  Show the answer on the screen
-  var answer = $("<h1>");
-  answer.text("The answer is: " + choicesArray[index].choice);
-  $(".question-area").append(answer);
-  //  Increment the incorrect answers by one and show a screen that shows the correct answer
-  incorrectAnswers++;
 }
 
 //  This stops the interval timer when the game is over
@@ -220,7 +234,11 @@ $(document).ready(function() {
   });
 
   //Choice Button Listener
-  $(".choice").on("click", function() {
+  $(document).on("click", ".choice", function() {
+      var buttonIndex = $(this).attr("index");
+      if ( buttonIndex === answerIndex ){
+          console.log("this is correct");
+      }
   });
 
 });
