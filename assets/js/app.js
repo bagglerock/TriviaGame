@@ -73,6 +73,7 @@ var incorrectAnswers;
 //  Timer Intervals
 var intervalTimer = 30000;
 var timeoutTimer = 25000;
+var intervalId;
 
 //  Variable to hold the interval for the question
 var gameTimer;
@@ -159,14 +160,22 @@ function nextQuestion() {
     getIndex(choices);
     //  Set a time out for the answers to show if the correct answer is not chosen
     setTimesUp(choices);
+    clearInterval(intervalId);
+    countdown = 25;
+    intervalId = setInterval(showTimer, 1000);
   } else {
     //  If the game is done then stop the questions from running and display the results
-    stopQuestions();
+    clearTimers();
     displayResults();
   }
 }
 
 //**   DOM manipulation functions   **/
+
+function showTimer() {
+  countdown--;
+  $(".timer-area").text(countdown);
+}
 
 //  Function that clears the area where the questions are shown
 function clearQuestion() {
@@ -256,20 +265,22 @@ function startTimer() {
 function setTimesUp(choicesArray) {
   timesUp = setTimeout(function() {
     showAnswer(choicesArray);
+    clearInterval(intervalId);
   }, timeoutTimer);
 }
 
 //  This stops the interval timer when the game is over
-function stopQuestions() {
+function clearTimers() {
   clearInterval(gameTimer);
   clearTimeout(timesUp);
+  clearInterval(intervalId);
 }
 
 //Celebrate
-function celebrate() {
+function correctAnswer() {
   setTimeout(function() {
     nextQuestion();
-  }, 1000);
+  }, 5000);
 }
 
 //**   Event Listeners   **/
@@ -288,9 +299,9 @@ $(document).ready(function() {
   $(document).on("click", ".choice", function() {
     var buttonIndex = parseInt($(this).attr("index"));
     if (buttonIndex === answerIndex) {
+      clearTimers();
       correctAnswers++;
-      stopQuestions();
-      celebrate();
+      correctAnswer();
     } else {
       incorrectAnswers++;
     }
@@ -301,7 +312,6 @@ $(document).ready(function() {
 
 Issues to take on later:
 
-Need a visual countdown
 Visually needs some flair
 Message system needed, like please choose another choice or things like that.
 Have to change the questions to be more serious... or maybe add more unserious questions

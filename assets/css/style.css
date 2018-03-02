@@ -1,6 +1,12 @@
 * {
     font-family: 'Work Sans', sans-serif;
 }
+
+.timer-area {
+    height: 25px;
+    background-color: lightskyblue;
+    color: white;
+}
 .question-area {
     height: 300px;
     padding-top: 75px;
