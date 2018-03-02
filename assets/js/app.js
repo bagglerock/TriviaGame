@@ -63,13 +63,16 @@ var questions = [
 //  Boolean to hold the status of the game
 var gameRunning = false;
 
+// countdown display
+var countdown;
+
 //  Tallies
 var correctAnswers;
 var incorrectAnswers;
 
 //  Timer Intervals
-var intervalTimer = 30 * 1000;
-var TimeoutTimer = 5 * 1000;
+var intervalTimer = 35 * 1000;
+var timeoutTimer = 30 * 1000;
 
 //  Variable to hold the interval for the question
 var gameTimer;
@@ -81,7 +84,7 @@ var timesUp;
 var questionsAsked = [];
 
 //  Can't figure out how to hide the answer so I'm storing it in a global variable
-var answerIndex = "";
+var answerIndex;
 
 //**   Functions   **//
 
@@ -100,8 +103,8 @@ function pickQuestion() {
     var chosenQuestion = questions[randomNumber];
     questionsAsked.push(chosenQuestion);
     questions.splice(randomNumber, 1);
-    if (questions.length === 0){
-        gameRunning = false;
+    if (questions.length === 0) {
+      gameRunning = false;
     }
     return chosenQuestion;
   }
@@ -120,13 +123,12 @@ function randomizeChoices(questionObject) {
 }
 
 function getIndex(choicesArray) {
-    var index = choicesArray.findIndex(function(choice) {
-        return choice.status === "true";
-      });
+  var index = choicesArray.findIndex(function(choice) {
+    return choice.status === "true";
+  });
 
-      answerIndex = index;
-      console.log(answerIndex);
-
+  answerIndex = index;
+  console.log(answerIndex);
 }
 
 //**   DOM manipulation functions   **/
@@ -155,9 +157,9 @@ function displayChoices(choicesArray) {
   for (var i = 0; i < choicesArray.length; i++) {
     var choice = $("<button>");
     choice
-    .text(choicesArray[i].choice)
-    .addClass("btn btn-primary choice")
-    .attr("index", i);
+      .text(choicesArray[i].choice)
+      .addClass("btn btn-primary choice")
+      .attr("index", i);
     $(".choices").append(choice);
   }
 }
@@ -170,18 +172,18 @@ function displayResults() {
 }
 
 function showAnswer(choicesArray) {
-    //  Something I found that can find the index of the array where a certain key is
-    clearQuestion();
-    var index = choicesArray.findIndex(function(choice) {
-      return choice.status === "true";
-    });
-    //  Show the answer on the screen
-    var answer = $("<h1>");
-    answer.text("The answer is: " + choicesArray[index].choice);
-    $(".question-area").append(answer);
-    //  Increment the incorrect answers by one and show a screen that shows the correct answer
-    incorrectAnswers++;
-  }
+  //  Something I found that can find the index of the array where a certain key is
+  clearQuestion();
+  var index = choicesArray.findIndex(function(choice) {
+    return choice.status === "true";
+  });
+  //  Show the answer on the screen
+  var answer = $("<h1>");
+  answer.text("The answer is: " + choicesArray[index].choice);
+  $(".question-area").append(answer);
+  //  Increment the incorrect answers by one and show a screen that shows the correct answer
+  incorrectAnswers++;
+}
 
 //**   Functions that manipulate timers   **/
 
@@ -189,7 +191,7 @@ function startTimer() {
   //  Show the Timed Out screen after 30 seconds
   gameTimer = setInterval(function() {
     nextQuestion();
-  }, 5000);
+  }, intervalTimer);
 }
 
 //  Maybe should be called show next question..  automatically chooses a next question
@@ -209,9 +211,9 @@ function nextQuestion() {
     //  Set a time out for the answers to show if the correct answer is not chosen
     timesUp = setTimeout(function() {
       showAnswer(choices);
-    }, 4000);
+    }, timeoutTimer);
   } else {
-      console.log("have to change the screen to display the results");
+    console.log("have to change the screen to display the results");
     stopQuestions();
     displayResults();
   }
@@ -220,12 +222,12 @@ function nextQuestion() {
 //  This stops the interval timer when the game is over
 function stopQuestions() {
   clearInterval(gameTimer);
+  clearTimeout(timesUp);
 }
 
 //**   Event Listeners   **/
 $(document).ready(function() {
-
-    //  Start Button Listener
+  //  Start Button Listener
   $("#start-game").on("click", function() {
     $("#start-game").remove();
     initialize();
@@ -235,56 +237,39 @@ $(document).ready(function() {
 
   //Choice Button Listener
   $(document).on("click", ".choice", function() {
-      var buttonIndex = $(this).attr("index");
-      if ( buttonIndex === answerIndex ){
-          console.log("this is correct");
-      }
+    var buttonIndex = parseInt($(this).attr("index"));
+    if (buttonIndex === answerIndex) {
+      stopQuestions();
+      console.log("that was correct, now wait a few seconds and bask in your awesomeness");
+      celebrate();
+    } else {
+        //grey out the choice and say something like choose again
+    }
   });
+
+  //Celebrate
+  function celebrate(){
+      setTimeout(function(){
+          nextQuestion();
+      }, 5000)
+  }
+
+
+
+
 
 });
 
+
+
 /*
 
-Its almost like a slideshow
+Issues to take on later:
 
-Start button initiates the game.
-
-Once the game is started, the timer starts and the first question is displayed.
-
-If the correct answer is selected, the timer stops and a new timer starts as the "celebratory" picture is displayed.
-If the incorrect answer is selected, the incorrect answer is crossed out but the timer continues.  
-If the timer runs out without the correct answer selected, the correct answer is displayed with an "explanatory" picture is displayed.
-
-Depending on the status of the answer, the score is changed accordingly.
-
-After the new timer is exhausted, a new question comes up with a new timer.
-
-After all the questions have been asked, the game stops the last timer and the score is displayed as well as the start button.
-
-
-Add some classes like incorrect-answer and correct-answer so we can eliminate the wrong asnwers ever 10 seconds
-
-
-Assignment Directions
-
-### Option Two: Advanced Assignment (Timed Questions)
-
-![Advanced](Images/2-advanced.jpg)
-
-**[Click Here to Watch the demo](advanced-trivia-demo.mov)**.
-
-* You'll create a trivia game that shows only one question until the player answers it or their time runs out.
-
-* If the player selects the correct answer, show a screen congratulating them for choosing the right option. After a few seconds, display the next question -- do this without user input.
-
-* The scenario is similar for wrong answers and time-outs.
-
-  * If the player runs out of time, tell the player that time's up and display the correct answer. Wait a few seconds, then show the next question.
-  * If the player chooses the wrong answer, tell the player they selected the wrong option and then display the correct answer. Wait a few seconds, then show the next question.
-
-* On the final screen, show the number of correct answers, incorrect answers, and an option to restart the game (without reloading the page).
-
-
+Need a visual countdown
+The mechanics still do not work.  The normal timer works but when the right answer is selected, it doesnt reset the timer.
+Visually needs some flair
+Message system needed, like please choose another choice or things like that.
 
 
 
