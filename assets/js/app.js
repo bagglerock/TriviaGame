@@ -72,7 +72,7 @@ var incorrectAnswers;
 
 //  Timer Intervals
 var intervalTimer = 18000;
-var timeoutTimer = 15000;
+var timeoutTimer = 15999;
 var intervalId;
 
 //  Variable to hold the interval for the question
@@ -323,9 +323,6 @@ $(document).ready(function() {
 
 Issues to take on later:
 
-rewrite the intervals and time outs
-The timer stop now when the answer is shown after the timeUp
-There should be a message after the correct message is chosen
 Visually needs some flair
 Message system needed, like please choose another choice or things like that.
 Have to change the questions to be more serious... or maybe add more unserious questions
