@@ -71,8 +71,8 @@ var correctAnswers;
 var incorrectAnswers;
 
 //  Timer Intervals
-var intervalTimer = 30000;
-var timeoutTimer = 25000;
+var intervalTimer = 18000;
+var timeoutTimer = 15000;
 var intervalId;
 
 //  Variable to hold the interval for the question
@@ -161,7 +161,8 @@ function nextQuestion() {
     //  Set a time out for the answers to show if the correct answer is not chosen
     setTimesUp(choices);
     clearInterval(intervalId);
-    countdown = 25;
+    countdown = 15;
+    $(".timer-area").text(countdown);
     intervalId = setInterval(showTimer, 1000);
   } else {
     //  If the game is done then stop the questions from running and display the results
@@ -252,6 +253,13 @@ function showAnswer(choicesArray) {
   incorrectAnswers++;
 }
 
+function displayCorrect() {
+  clearQuestion();
+  var correct = $("<h1>");
+  correct.text("That is correct!");
+  $(".question-area").append(correct);
+}
+
 //**   Functions that manipulate timers   **/
 
 //  Start the timer for the questions to show
@@ -280,7 +288,8 @@ function clearTimers() {
 function correctAnswer() {
   setTimeout(function() {
     nextQuestion();
-  }, 5000);
+  }, 2000);
+  displayCorrect();
 }
 
 //**   Event Listeners   **/
@@ -299,10 +308,12 @@ $(document).ready(function() {
   $(document).on("click", ".choice", function() {
     var buttonIndex = parseInt($(this).attr("index"));
     if (buttonIndex === answerIndex) {
+      console.log("correct answer");
       clearTimers();
       correctAnswers++;
       correctAnswer();
     } else {
+      console.log("incorrect answer");
       incorrectAnswers++;
     }
   });
@@ -312,6 +323,9 @@ $(document).ready(function() {
 
 Issues to take on later:
 
+rewrite the intervals and time outs
+The timer stop now when the answer is shown after the timeUp
+There should be a message after the correct message is chosen
 Visually needs some flair
 Message system needed, like please choose another choice or things like that.
 Have to change the questions to be more serious... or maybe add more unserious questions

@@ -4,8 +4,9 @@
 
 .timer-area {
     height: 25px;
-    background-color: lightskyblue;
+    background-color: black;
     color: white;
+    text-align: center;
 }
 .question-area {
     height: 300px;
