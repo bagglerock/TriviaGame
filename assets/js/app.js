@@ -213,6 +213,7 @@ function displayChoices(choicesArray) {
 //  Display the results on the screen
 function displayResults() {
   clearQuestion();
+  clearChoices();
   var summary = $("<p>");
   summary.text(
     "You have made " +
@@ -262,7 +263,7 @@ function displayCorrect() {
 
 //**   Functions that manipulate timers   **/
 
-//  Start the timer for the questions to show
+//  Start the interval.. do the next question every so many seconds as specified by the intervalTimer
 function startTimer() {
   gameTimer = setInterval(function() {
     nextQuestion();
@@ -313,7 +314,9 @@ $(document).ready(function() {
       correctAnswers++;
       correctAnswer();
     } else {
-      console.log("incorrect answer");
+      $(this).attr("disabled", true)
+      //disableChoiceButton(this);
+      //changeChoiceColor();
       incorrectAnswers++;
     }
   });
@@ -326,6 +329,12 @@ Issues to take on later:
 Visually needs some flair
 Message system needed, like please choose another choice or things like that.
 Have to change the questions to be more serious... or maybe add more unserious questions
+
+If a choice is clicked... 
+1.  if the correct one is chosen... disable clicking and show only the correct answer
+2.  if the incorrect choice is chosen... disable that button and change its color or maybe just get rid of the button completely
+3.  add messages under the question... possibly another div... 
+4.  the timer should be under the question as well... and larger
 
 
 

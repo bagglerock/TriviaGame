@@ -15,10 +15,10 @@
 
 .choices {
     height: 300px;
-    padding-top: 25px;
+    padding-top: 50px;
 }
 
 .choice {
     width: 400px;
-    margin-bottom: 20px;
+    margin: 0 20px 20px 0;
 }
