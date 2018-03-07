@@ -270,6 +270,7 @@ var incorrectAnswers;
 //  Timer Intervals
 var intervalTimer = 18000;
 var timeoutTimer = 15999;
+//  Timer countdown interval
 var intervalId;
 
 //  Variable to hold the interval for the question
@@ -357,6 +358,7 @@ function nextQuestion() {
     getIndex(choices);
     //  Set a time out for the answers to show if the correct answer is not chosen
     setTimesUp(choices);
+    // Clear the interval that holds the countdown
     clearInterval(intervalId);
     countdown = 15;
     $(".timer-area").text(countdown);
@@ -415,7 +417,7 @@ function displayResults() {
   summary.text(
     "You have made " +
     correctAnswers +
-    " correct answers and " +
+    " correct answers and selected " +
     incorrectAnswers +
     " incorrect answers"
   );
@@ -451,10 +453,10 @@ function showAnswer(choicesArray) {
   incorrectAnswers++;
 }
 
-function displayCorrect() {
+function displayCorrect(answerText) {
   clearQuestion();
   var correct = $("<h1>");
-  correct.text("That is correct!");
+  correct.text("That is correct! The answer is: " + answerText);
   $("#question-area").append(correct);
 }
 
@@ -490,13 +492,13 @@ function clearTimers() {
   clearInterval(intervalId);
 }
 
-//Celebrate
-function correctAnswer() {
+//Set the timer for the next question
+function setNextQuestion() {
   setTimeout(function () {
     nextQuestion();
+    startTimer();
   }, 2000);
-  console.log(correctAnswers);
-  displayCorrect();
+  
   
 }
 
@@ -516,18 +518,18 @@ $(document).ready(function () {
   $(document).on("click", ".choice", function () {
     var buttonIndex = parseInt($(this).attr("index"));
     if (buttonIndex === answerIndex) {
+      var answerText = $(this)[0].innerText;
       clearTimers();
       correctAnswers++;
       disableAllButtons();
-      correctAnswer(this);
+      displayCorrect(answerText);
+      setNextQuestion();
     } else {
       $(this)
       .attr("disabled", true)
       .addClass("incorrect")
       .text("incorrect");
       disableChoiceButton(this);
-      console.log("nope");
-      //changeChoiceColor();
       incorrectAnswers++;
     }
   });
@@ -537,53 +539,12 @@ $(document).ready(function () {
 
 Issues to take on later:
 
-Visually needs some flair
-Message system needed, like please choose another choice or things like that.
-Have to change the questions to be more serious... or maybe add more unserious questions
+
 
 If a choice is clicked... 
-1.  if the correct one is chosen... disable clicking and show only the correct answer
+
 2.  if the incorrect choice is chosen... disable that button and change its color or maybe just get rid of the button completely
 3.  add messages under the question... possibly another div... 
 4.  the timer should be under the question as well... and larger
-
-
-
-
-
-//  This will be the start of the game.  Once #some-button is clicked then show the first question... 
-$("#some-button").on("click", function () {
-  //  Show the first question when the button is clicked
-  showNextQuestion();
-  //  Start the main timer once the button is clicked
-  startMainQuestionsTimer();
-})
-
-//  That original interval timer will now be in this function.  It will be fired because it will be called on button click.
-function startMainQuestionsTimer() {
-  //  This is the first timer.  It is a standalone timer that fires every 5 seconds.  It should show the next question and set the timeout for the answer.
-  timer1 = setInterval(function () {
-    //  showNextQuestion() should be a function to show the next question in html
-    showNextQuestion();
-    //  setAnswerTimeout() fires out the function defined below.  
-    setAnswerTimeout(1000);
-    //  The layout of this timer1 variable looks like this => setInterval( someFunction() , time );
-    //  This next piece here is just setting the interval at 5 seconds
-    setAnswerTimeout(2000);
-  }, 5000);
-}
-
-//  This is the function that sets a Timeout which is called in the previous Interval.  
-function setAnswerTimeout(time) {
-  //  Similar to the interval, but this will only fire a function once.  Same syntax => setTimeout ( someFunction() , time );
-  timer2 = setTimeout(function () {
-    //   This will console log this text in 2 seconds.. but then the timer is done and will not be fire again unless it is called. 
-    console.log("this is the answer time out but it will only fire once it is called");
-  }, time);
-}
-
-function showNextQuestion() {
-  console.log("This is the next question");
-}
 
 */
