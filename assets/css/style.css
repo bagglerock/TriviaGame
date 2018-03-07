@@ -1,5 +1,23 @@
 * {
-    font-family: 'Work Sans', sans-serif;
+    font-family: 'Quicksand', sans-serif;
+}
+
+header, .choices {
+    background-color: lightgoldenrodyellow;
+}
+
+header h1, .head-small{
+    font-family: 'Rammetto One', cursive;
+    color: black;
+    letter-spacing: 2px;
+}
+
+h1 {
+    font-size: 40px;
+}
+
+.head-small {
+    font-size: 14px;
 }
 
 .timer-area {
