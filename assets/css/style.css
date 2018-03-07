@@ -2,7 +2,7 @@
     font-family: 'Quicksand', sans-serif;
 }
 
-header, .choices {
+header, #choices-area {
     background-color: lightgoldenrodyellow;
 }
 
@@ -16,6 +16,12 @@ h1 {
     font-size: 40px;
 }
 
+footer, footer p {
+    background-color: black;
+    color: white;
+    text-align: center;
+}
+
 .head-small {
     font-size: 14px;
 }
@@ -26,17 +32,26 @@ h1 {
     color: white;
     text-align: center;
 }
-.question-area {
-    height: 300px;
-    padding-top: 75px;
-}
-
-.choices {
-    height: 300px;
-    padding-top: 50px;
-}
 
 .choice {
     width: 400px;
     margin: 0 20px 20px 0;
+    background-color: lightcoral;
+    color: white;
 }
+
+.incorrect {
+    background-color: lightpink;
+}
+
+#question-area {
+    height: 300px;
+    padding-top: 75px;
+    background-color: lightcoral;
+}
+
+#choices-area {
+    height: 300px;
+    padding-top: 50px;
+}
+

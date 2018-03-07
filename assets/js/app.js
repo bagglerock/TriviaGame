@@ -377,12 +377,12 @@ function showTimer() {
 
 //  Function that clears the area where the questions are shown
 function clearQuestion() {
-  $(".question-area").empty();
+  $("#question-area").empty();
 }
 
 //  Function that clears the area where the choices are shown
 function clearChoices() {
-  $(".choices").empty();
+  $("#choices-area").empty();
 }
 
 //  Display the question in the question area
@@ -390,7 +390,7 @@ function displayQuestion(questionObject) {
   clearQuestion();
   var question = $("<h1>");
   question.text(questionObject.question);
-  $(".question-area").append(question);
+  $("#question-area").append(question);
 }
 
 //  Display the buttons of the choices in the choices area
@@ -400,10 +400,10 @@ function displayChoices(choicesArray) {
     var choice = $("<button>");
     choice
       .text(choicesArray[i].choice)
-      .addClass("btn btn-danger choice")
+      .addClass("btn choice")
       //  Set the index here so we have a way of determining the correct answer
       .attr("index", i);
-    $(".choices").append(choice);
+    $("#choices-area").append(choice);
   }
 }
 
@@ -421,8 +421,8 @@ function displayResults() {
   );
   var message = $("<h1>");
   message.text("Here are your results");
-  $(".question-area").append(message);
-  $(".question-area").append(summary);
+  $("#question-area").append(message);
+  $("#question-area").append(summary);
   makeStartButton();
 }
 
@@ -433,7 +433,7 @@ function makeStartButton() {
     .attr("id", "start-game")
     .addClass("btn btn-secondary")
     .text("Start Game");
-  $(".question-area").append(startButton);
+  $("#question-area").append(startButton);
 }
 
 //  Show the answer if the timer goes to 0 and increment the incorrect answers tally
@@ -446,7 +446,7 @@ function showAnswer(choicesArray) {
   //  Show the answer on the screen
   var answer = $("<h1>");
   answer.text("The answer is: " + choicesArray[index].choice);
-  $(".question-area").append(answer);
+  $("#question-area").append(answer);
   //  Increment the incorrect answers by one and show a screen that shows the correct answer
   incorrectAnswers++;
 }
@@ -455,11 +455,15 @@ function displayCorrect() {
   clearQuestion();
   var correct = $("<h1>");
   correct.text("That is correct!");
-  $(".question-area").append(correct);
+  $("#question-area").append(correct);
 }
 
 function disableChoiceButton() {
   $(this).attr("disabled", true);
+}
+
+function disableAllButtons() {
+  $(".choice").attr("disabled", true);
 }
 
 //**   Functions that manipulate timers   **/
@@ -491,9 +495,9 @@ function correctAnswer() {
   setTimeout(function () {
     nextQuestion();
   }, 2000);
-  console.log("yes");
+  console.log(correctAnswers);
   displayCorrect();
-  $(this).attr("disabled", true);
+  
 }
 
 //**   Event Listeners   **/
@@ -514,9 +518,13 @@ $(document).ready(function () {
     if (buttonIndex === answerIndex) {
       clearTimers();
       correctAnswers++;
+      disableAllButtons();
       correctAnswer(this);
     } else {
-      $(this).attr("disabled", true)
+      $(this)
+      .attr("disabled", true)
+      .addClass("incorrect")
+      .text("incorrect");
       disableChoiceButton(this);
       console.log("nope");
       //changeChoiceColor();
