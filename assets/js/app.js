@@ -278,11 +278,13 @@ var questions = [
 var gameRunning = false;
 
 // countdown display
-var countdown = 25;
+var countdownInitial = 15;
+var countdownHolder;
 
 //  Tallies
 var correctAnswers;
 var incorrectAnswers;
+var timeElapsed;
 
 //  Timer Intervals
 var intervalTimer = 18000;
@@ -313,6 +315,7 @@ function initialize() {
   gameRunning = true;
   correctAnswers = 0;
   incorrectAnswers = 0;
+  timeElapsed = 0;
   //  Had to copy this little piece of code to deep clone an array.  A deep clone is a clone of an array that copies the objects within also
   //  This close was needed because the original array would be blank after one game was played
   questionsTwin = jQuery.extend(true, [], questions);
@@ -381,9 +384,9 @@ function nextQuestion() {
     //  Clear the interval that holds the countdown
     clearInterval(countdownInterval);
     //  Reset the timer for the countdown
-    countdown = 15;
+    countdownHolder = countdownInitial;
     //  Display the timer in the timer-area
-    $("#timer-area").text(countdown);
+    $("#timer-area").text(countdownHolder);
     //  Start the interval for the countdown timer
     countdownInterval = setInterval(showTimer, 1000);
   } else {
@@ -397,8 +400,8 @@ function nextQuestion() {
 //**   DOM manipulation functions   **/
 
 function showTimer() {
-  countdown--;
-  $("#timer-area").text(countdown);
+  countdownHolder--;
+  $("#timer-area").text(countdownHolder);
 }
 
 function clearTimerArea() {
@@ -447,6 +450,15 @@ function displayCorrect(answerText) {
   $("#question-area h1").fadeIn();
 }
 
+//  Displays a message if you make the incorrect choice
+function displayIncorrect(answerText) {
+  clearQuestion();
+  var incorrect = $("<h1>");
+  incorrect.text("No, that is incorrect! The answer is: " + answerText);
+  $("#question-area").append(incorrect);
+  $("#question-area h1").fadeIn();
+}
+
 //  Show the answer if the timer goes to 0 and increment the incorrect answers tally
 function displayAnswer(choicesArray) {
   //  Something I found that can find the index of the array where a certain key is
@@ -471,9 +483,10 @@ function displayResults() {
   summary.text(
     "You have made " +
       correctAnswers +
-      " correct answers and selected " +
+      " correct answers and " +
       incorrectAnswers +
-      " incorrect answers"
+      " incorrect answers. You have used " +
+      timeElapsed + " seconds off the timer."
   );
   var message = $("<h1>");
   message.text("Here are your results");
@@ -537,6 +550,9 @@ function setNextQuestion() {
 
 //  This just makes sure that the page is fully loaded to start listening to stuff
 $(document).ready(function() {
+
+
+
   //  Start Button Listener
   $(document).on("click", "#start-game", function() {
     $("#start-game").remove();
@@ -548,29 +564,21 @@ $(document).ready(function() {
   //Choice Button Listener
   $(document).on("click", ".choice", function() {
     var buttonIndex = parseInt($(this).attr("index"));
+    var answerText = $(this)[0].innerText;
+    var answerIndexText = $(".choice[index='" + answerIndex + "'").text();
+    clearTimers();
+    disableAllButtons();
     if (buttonIndex === answerIndex) {
-      var answerText = $(this)[0].innerText;
-      clearTimers();
       correctAnswers++;
-      disableAllButtons();
       displayCorrect(answerText);
-      setNextQuestion();
     } else {
-      $(this)
-        .attr("disabled", true)
-        .addClass("incorrect")
-        .text("incorrect");
-      disableChoiceButton(this);
       incorrectAnswers++;
+      timeElapsed += (countdownInitial - countdownHolder);
+      displayIncorrect(answerIndexText);
     }
+    setNextQuestion();
   });
+
+
+
 });
-
-/*
-
-Issues to take on later:
-
-If the wrong answer is chosen, make it so that it goes on to the next question and tallies the answer
-Or if the wrong answer is chosen, add up the remainder of seconds to make a score.
-
-*/
