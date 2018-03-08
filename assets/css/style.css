@@ -1,61 +1,63 @@
 * {
-    font-family: 'Quicksand', sans-serif;
+  font-family: "Quicksand", sans-serif;
 }
 
-header, #choices-area {
-    background-color: lightgoldenrodyellow;
+header,
+#choices-area {
+  background-color: lightgoldenrodyellow;
 }
 
-header h1, .head-small{
-    font-family: 'Rammetto One', cursive;
-    color: black;
-    letter-spacing: 2px;
+header h1,
+.head-small {
+  font-family: "Rammetto One", cursive;
+  color: black;
+  letter-spacing: 2px;
 }
 
 h1 {
-    font-size: 40px;
+  font-size: 40px;
 }
 
-footer, footer p {
-    background-color: black;
-    color: white;
-    text-align: center;
+footer,
+footer p {
+  background-color: black;
+  color: white;
+  text-align: center;
 }
 
 .head-small {
-    font-size: 14px;
+  font-size: 14px;
 }
 
 .choice {
-    width: 400px;
-    margin: 0 20px 20px 0;
-    background-color: lightcoral;
-    color: white;
+  width: 400px;
+  margin: 0 20px 20px 0;
+  background-color: lightcoral;
+  color: white;
 }
 
 .incorrect {
-    background-color: lightpink;
+  background-color: lightpink;
 }
 
 #timer-area {
-    height: 25px;
-    background-color: black;
-    color: white;
-    text-align: center;
+  height: 25px;
+  background-color: black;
+  color: white;
+  text-align: center;
 }
 
 #question-area {
-    height: 300px;
-    padding-top: 75px;
-    background-color: lightcoral;
+  height: 300px;
+  padding-top: 75px;
+  background-color: lightcoral;
 }
 
 #choices-area {
-    height: 300px;
-    padding-top: 50px;
+  height: 300px;
+  padding-top: 50px;
 }
 
 #question-area h1 {
-    display: none;
+  display: none;
 }
-
