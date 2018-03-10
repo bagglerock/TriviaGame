@@ -34,6 +34,7 @@ footer p {
   margin: 0 20px 20px 0;
   background-color: lightcoral;
   color: white;
+  cursor: pointer;
 }
 
 .incorrect {
