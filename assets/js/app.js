@@ -562,10 +562,10 @@ $(document).ready(function() {
   });
 
   //Choice Button Listener
-  $(document).on("click", ".choice", function() {
+  $(document).on("click", "#choices-area .choice", function() {
     var buttonIndex = parseInt($(this).attr("index"));
     var answerText = $(this)[0].innerText;
-    var answerIndexText = $(".choice[index='" + answerIndex + "'").text();
+    var answerIndexText = $(".choice[index='" + answerIndex + "']").text();
     clearTimers();
     disableAllButtons();
     if (buttonIndex === answerIndex) {
