@@ -1,7 +1,5 @@
 ### Overview
 
-In this assignment, You'll create a Trivia game using JavaScript for the logic and jQuery to manipulate HTML. Be sure to layout this app with valid HTML and stylish CSS.
-
 This is a fun little take on Trivia.  I could not think of any questions or answers so I wanted to create a list of questions and answers that made absolutely no sense.
 
 This is written in basic HTML using some Bootstrap, a little CSS, Javascript and Jquery.  
